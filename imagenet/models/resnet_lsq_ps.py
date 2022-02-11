@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 import math
-from .lsq import Conv2dLSQ, LinearLSQ, ActLSQ, PartialSumLSQ, PartialSumNoQ
+from .lsq import Conv2dLSQ, LinearLSQ, ActLSQ, PartialSumLSQ
 
 __all__ = ['resnet_lsq_ps']
 
