@@ -93,34 +93,6 @@ fh = logging.FileHandler(os.path.join('log/log.txt'))
 fh.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(fh)
 
-class Lighting(object):
-    def __init__(self, alphastd,
-                 eigval=imagenet_pca['eigval'],
-                 eigvec=imagenet_pca['eigvec']):
-        self.alphastd = alphastd
-        assert eigval.shape == (3,)
-        assert eigvec.shape == (3, 3)
-        self.eigval = eigval
-        self.eigvec = eigvec
-
-    def __call__(self, img):
-        if self.alphastd == 0.:
-            return img
-        rnd = np.random.randn(3) * self.alphastd
-        rnd = rnd.astype('float32')
-        v = rnd
-        old_dtype = np.asarray(img).dtype
-        v = v * self.eigval
-        v = v.reshape((3, 1))
-        inc = np.dot(self.eigvec, v).reshape((3,))
-        img = np.add(img, inc)
-        if old_dtype == np.uint8:
-            img = np.clip(img, 0, 255)
-        img = Image.fromarray(img.astype(old_dtype), 'RGB')
-        return img
-
-    def __repr__(self):
-        return self.__class__.__name__ + '()'
 
 def main():
     if not torch.cuda.is_available():
