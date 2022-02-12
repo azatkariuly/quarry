@@ -7,6 +7,7 @@ import pandas as pd
 from bokeh.io import output_file, save, show
 from bokeh.plotting import figure
 from bokeh.layouts import column
+from PIL import Image
 #from bokeh.charts import Line, defaults
 #
 #defaults.width = 800
