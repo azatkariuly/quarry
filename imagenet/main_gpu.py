@@ -71,7 +71,7 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('-e', '--evaluate', type=str, metavar='FILE',
                     help='evaluate model FILE on validation set')
-parser.add_argument('--pretrained_model', default='', type=str, metavar='FILE',
+parser.add_argument('--pretrained', default='', type=str, metavar='FILE',
                     help='pretrained model FILE')
 parser.add_argument('--nbits', default=3, type=int,
                     metavar='N', help='layer quantization precision (default: 3)')
