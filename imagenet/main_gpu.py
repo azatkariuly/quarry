@@ -344,8 +344,8 @@ def validate(epoch, val_loader, model, criterion, args):
             pred1, pred5 = accuracy(logits, target, topk=(1, 5))
             n = images.size(0)
             losses.update(loss.item(), n)
-            top1.update(pred1[0], n)
-            top5.update(pred5[0], n)
+            top1.update(pred1.item(), n)
+            top5.update(pred5.item(), n)
 
             # measure elapsed time
             batch_time.update(time.time() - end)
