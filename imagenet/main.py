@@ -121,6 +121,7 @@ def main():
     model = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
     #print(model)
+    model = nn.DataParallel(model).cuda()
 
     #load pretrained baseline model (needed to be splitted)
     if args.pretrained_baseline:
@@ -182,8 +183,8 @@ def main():
                                            'weight_decay': args.weight_decay}})
     # define loss function (criterion) and optimizer
     criterion = getattr(model, 'criterion', nn.CrossEntropyLoss)()
-    criterion.type(args.type)
-    model.type(args.type)
+    criterion = criterion.cuda()
+    #model.type(args.type)
 
     val_data = get_dataset(args.dataset, 'val', transform['eval'])
     val_loader = torch.utils.data.DataLoader(
@@ -271,17 +272,17 @@ def forward(data_loader, model, criterion, epoch=0, training=True, optimizer=Non
     for i, (inputs, target) in enumerate(data_loader):
         # measure data loading time
         data_time.update(time.time() - end)
-        if args.gpus is not None:
-            target = target.cuda()
+        inputs = inputs.cuda()
+        target = target.cuda()
 
         if not training:
             with torch.no_grad():
-                input_var = Variable(inputs.type(args.type), volatile=not training)
+                input_var = Variable(inputs, volatile=not training)
                 target_var = Variable(target)
                 # compute output
                 output = model(input_var)
         else:
-            input_var = Variable(inputs.type(args.type), volatile=not training)
+            input_var = Variable(inputs, volatile=not training)
             target_var = Variable(target)
             # compute output
             output = model(input_var)
