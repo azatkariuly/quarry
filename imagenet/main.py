@@ -121,7 +121,6 @@ def main():
     model = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
     #print(model)
-    model = nn.DataParallel(model).cuda()
 
     #load pretrained baseline model (needed to be splitted)
     if args.pretrained_baseline:
@@ -165,6 +164,9 @@ def main():
                          checkpoint_file, checkpoint['epoch'])
         else:
             logging.error("no checkpoint found at '%s'", args.resume)
+
+
+    model = nn.DataParallel(model).cuda()
 
     num_parameters = sum([l.nelement() for l in model.parameters()])
     logging.info("number of parameters: %d", num_parameters)
