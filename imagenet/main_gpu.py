@@ -2,7 +2,8 @@ import os
 import sys
 import shutil
 import numpy as np
-import time, datetime
+import time
+from datetime import datetime
 import torch
 import random
 import logging
