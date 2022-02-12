@@ -100,7 +100,7 @@ def main():
     start_t = time.time()
 
     if args.save is '':
-        args.save = datetime.now().strftime('/garbage')
+        args.save = datetime.now().strftime('garbage')
     save_path = os.path.join(args.results_dir, args.save)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
