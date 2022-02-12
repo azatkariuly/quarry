@@ -80,6 +80,7 @@ parser.add_argument('--psumq-bits', default=3, type=int,
 #assume pretrained baseline is not splitted
 parser.add_argument('--pretrained_baseline', default='', type=str, metavar='FILE',
                     help='pretrained baseline model FILE')
+args = parser.parse_args()
 
 if not os.path.exists('log'):
     os.mkdir('log')
