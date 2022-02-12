@@ -13,6 +13,7 @@ import torch.backends.cudnn as cudnn
 import torch.distributed as dist
 import torch.utils.data.distributed
 from split import split_model_conv
+import models
 
 #sys.path.append("../")
 from utils import *
