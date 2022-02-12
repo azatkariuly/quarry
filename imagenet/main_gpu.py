@@ -134,13 +134,6 @@ def main():
         split_model_conv(model, model_baseline)
 
         print('DONE splitting and copying baseline')
-    #load pretrained model
-    elif args.pretrained_model:
-        if not os.path.isfile(args.pretrained_model):
-            parser.error('invalid file for pretrained model: {}'.format(args.pretrained_model))
-        checkpoint = torch.load(args.pretrained_model)
-        model.load_state_dict(checkpoint['state_dict'])
-        logging.info("loaded pretrained model")
 
     criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
