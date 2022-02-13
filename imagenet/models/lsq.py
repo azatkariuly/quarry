@@ -48,8 +48,7 @@ class LSQ(Function):
 
 
 def grad_scale(x, scale):
-    k=8
-    yOut = round_pass(x.clamp(0, 2**k-1))
+    yOut = x
     yGrad = x*scale
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
@@ -70,7 +69,12 @@ def quantizeLSQ(v, s, p, isActivation=False):
         Qp = 2**(p-1) - 1
         gradScaleFactor = 1.0 / math.sqrt(v.numel() * Qp)
 
-    #quantize
+    #quantize sf
+    k=8
+    s1 = s.clamp(0, 2**k-1).round()
+    s = s.detach() - s1.detach() + s1
+
+    #quantize layer
     s = grad_scale(s, gradScaleFactor)
     vbar = round_pass((v/s).clamp(Qn, Qp))
     vhat = vbar*s
