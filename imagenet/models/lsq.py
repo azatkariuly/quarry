@@ -70,7 +70,7 @@ def quantizeLSQ(v, s, p, isActivation=False):
         gradScaleFactor = 1.0 / math.sqrt(v.numel() * Qp)
 
     #quantize sf
-    k=8
+    k=4
     s1 = s.clamp(0, 2**k-1).round()
     s = s.detach() - s1.detach() + s1
 
