@@ -59,7 +59,7 @@ def round_pass(x):
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
 
-def quantizeLSQ(v, s, p, isActivation=False):
+def quantizeLSQ(v, s, p, isActivation=False, k=8):
     if isActivation:
         Qn = 0
         Qp = 2**p - 1
@@ -70,7 +70,6 @@ def quantizeLSQ(v, s, p, isActivation=False):
         gradScaleFactor = 1.0 / math.sqrt(v.numel() * Qp)
 
     #quantize sf
-    k=4
     s1 = s.clamp(0, 2**k-1).round()
     s = s.detach() - s1.detach() + s1
 
@@ -154,6 +153,7 @@ class PartialSumLSQ(nn.Module):
     def __init__(self, **kwargs):
         super(PartialSumLSQ, self).__init__()
         self.psumq_bits = kwargs['psumq_bits']
+        self.dsf_bits = kwargs['dsf_bits']
         self.step_size = Parameter(torch.Tensor(1))
 
         #buffer is not updated for optim.step
@@ -164,6 +164,6 @@ class PartialSumLSQ(nn.Module):
             self.step_size.data.copy_(2 * x.abs().mean() / math.sqrt(2 ** self.psumq_bits - 1))
             self.init_state.fill_(1)
 
-        x_q = quantizeLSQ(x, self.step_size, self.psumq_bits)
+        x_q = quantizeLSQ(x, self.step_size, self.psumq_bits, k=self.dsf_bits)
 
         return x_q

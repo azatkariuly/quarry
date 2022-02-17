@@ -76,6 +76,8 @@ parser.add_argument('--nbits', default=3, type=int,
                     metavar='N', help='layer quantization precision (default: 3)')
 parser.add_argument('--psumq-bits', default=3, type=int,
                     metavar='N', help='partial sum quantization precision (default: 3)')
+parser.add_argument('--dsf-bits', default=8, type=int,
+                    metavar='N', help='digital scale factor precision (default: 8)')
 #assume pretrained baseline is not splitted
 parser.add_argument('--pretrained_baseline', default='', type=str, metavar='FILE',
                     help='pretrained baseline model FILE')
@@ -112,8 +114,8 @@ def main():
     logging.info("creating model %s", args.model)
     model = models.__dict__[args.model]
 
-    model_config = {'input_size': args.input_size, 'dataset': args.dataset,
-                    'nbits': args.nbits, 'psumq_bits': args.psumq_bits}
+    model_config = {'input_size': args.input_size, 'dataset': args.dataset, 'nbits': args.nbits,
+                    'psumq_bits': args.psumq_bits, 'dsf_bits': args.dsf_bits}
 
     if args.model_config is not '':
         model_config = dict(model_config, **literal_eval(args.model_config))

@@ -16,8 +16,8 @@ def conv3x3(in_planes, out_planes, stride=1, nbits=3):
     return Conv2dLSQ(in_planes, out_planes, kernel_size=3, stride=stride,
                      padding=1, bias=False, nbits=nbits)
 
-def QuantizePartial(psumq_bits):
-    return PartialSumLSQ(psumq_bits=psumq_bits)
+def QuantizePartial(psumq_bits, dsf_bits):
+    return PartialSumLSQ(psumq_bits=psumq_bits, dsf_bits=dsf_bits)
 
 def init_model(model):
     for m in model.modules():
@@ -137,7 +137,7 @@ def split_tesnsor_512(xp,max_size = 128):
 class BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, inplanes, planes, stride=1, downsample=None, nbits=3, psumq_bits=3):
+    def __init__(self, inplanes, planes, stride=1, downsample=None, nbits=3, psumq_bits=3, dsf_bits=8):
         super(BasicBlock, self).__init__()
 
         ###########################################     CONV1       ##########################################
@@ -150,117 +150,117 @@ class BasicBlock(nn.Module):
         inplanes = min(input_dem,max_size)
 
         self.conv1 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq1 = QuantizePartial(psumq_bits)
+        self.psq1 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv2 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq2 = QuantizePartial(psumq_bits)
+        self.psq2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv3 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq3 = QuantizePartial(psumq_bits)
+        self.psq3 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv4 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq4 = QuantizePartial(psumq_bits)
+        self.psq4 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv5 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq5 = QuantizePartial(psumq_bits)
+        self.psq5 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv6 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq6 = QuantizePartial(psumq_bits)
+        self.psq6 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv7 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq7 = QuantizePartial(psumq_bits)
+        self.psq7 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv8 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq8 = QuantizePartial(psumq_bits)
+        self.psq8 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv9 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-        self.psq9 = QuantizePartial(psumq_bits)
+        self.psq9 = QuantizePartial(psumq_bits, dsf_bits)
 
         if (input_dem > 128):     #Input channels = 256
             self.conv12 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq12 = QuantizePartial(psumq_bits)
+            self.psq12 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv22 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq22 = QuantizePartial(psumq_bits)
+            self.psq22 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv32 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq32 = QuantizePartial(psumq_bits)
+            self.psq32 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv42 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq42 = QuantizePartial(psumq_bits)
+            self.psq42 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv52 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq52 = QuantizePartial(psumq_bits)
+            self.psq52 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv62 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq62 = QuantizePartial(psumq_bits)
+            self.psq62 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv72 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq72 = QuantizePartial(psumq_bits)
+            self.psq72 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv82 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq82 = QuantizePartial(psumq_bits)
+            self.psq82 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv92 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq92 = QuantizePartial(psumq_bits)
+            self.psq92 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         if (input_dem > 256):       #Input channels = 384
             self.conv13 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq13 = QuantizePartial(psumq_bits)
+            self.psq13 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv23 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq23 = QuantizePartial(psumq_bits)
+            self.psq23 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv33 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq33 = QuantizePartial(psumq_bits)
+            self.psq33 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv43 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq43 = QuantizePartial(psumq_bits)
+            self.psq43 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv53 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq53 = QuantizePartial(psumq_bits)
+            self.psq53 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv63 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq63 = QuantizePartial(psumq_bits)
+            self.psq63 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv73 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq73 = QuantizePartial(psumq_bits)
+            self.psq73 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv83 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq83 = QuantizePartial(psumq_bits)
+            self.psq83 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv93 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq93 = QuantizePartial(psumq_bits)
+            self.psq93 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         if (input_dem > 384):       #Input channels = 512
             self.conv14 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq14 = QuantizePartial(psumq_bits)
+            self.psq14 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv24 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq24 = QuantizePartial(psumq_bits)
+            self.psq24 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv34 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq34 = QuantizePartial(psumq_bits)
+            self.psq34 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv44 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq44 = QuantizePartial(psumq_bits)
+            self.psq44 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv54 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq54 = QuantizePartial(psumq_bits)
+            self.psq54 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv64 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq64 = QuantizePartial(psumq_bits)
+            self.psq64 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv74 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq74 = QuantizePartial(psumq_bits)
+            self.psq74 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv84 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq84 = QuantizePartial(psumq_bits)
+            self.psq84 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv94 = splitConv1x1(inplanes, planes, stride, nbits=nbits)
-            self.psq94 = QuantizePartial(psumq_bits)
+            self.psq94 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         ###########################################     END     ##########################################
@@ -274,117 +274,117 @@ class BasicBlock(nn.Module):
         groups = math.ceil(planes / max_size)
         self.padding2 = nn.ZeroPad2d(1)
         self.conv1_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq1_2 = QuantizePartial(psumq_bits)
+        self.psq1_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv2_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq2_2 = QuantizePartial(psumq_bits)
+        self.psq2_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv3_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq3_2 = QuantizePartial(psumq_bits)
+        self.psq3_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv4_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq4_2 = QuantizePartial(psumq_bits)
+        self.psq4_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv5_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq5_2 = QuantizePartial(psumq_bits)
+        self.psq5_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv6_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq6_2 = QuantizePartial(psumq_bits)
+        self.psq6_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv7_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq7_2 = QuantizePartial(psumq_bits)
+        self.psq7_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv8_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq8_2 = QuantizePartial(psumq_bits)
+        self.psq8_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         self.conv9_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-        self.psq9_2 = QuantizePartial(psumq_bits)
+        self.psq9_2 = QuantizePartial(psumq_bits, dsf_bits)
 
         if(planes>128):
             self.conv12_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq12_2 = QuantizePartial(psumq_bits)
+            self.psq12_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv22_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq22_2 = QuantizePartial(psumq_bits)
+            self.psq22_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv32_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq32_2 = QuantizePartial(psumq_bits)
+            self.psq32_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv42_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq42_2 = QuantizePartial(psumq_bits)
+            self.psq42_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv52_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq52_2 = QuantizePartial(psumq_bits)
+            self.psq52_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv62_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq62_2 = QuantizePartial(psumq_bits)
+            self.psq62_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv72_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq72_2 = QuantizePartial(psumq_bits)
+            self.psq72_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv82_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq82_2 = QuantizePartial(psumq_bits)
+            self.psq82_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv92_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq92_2 = QuantizePartial(psumq_bits)
+            self.psq92_2 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         if (planes > 256):
             self.conv13_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq13_2 = QuantizePartial(psumq_bits)
+            self.psq13_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv23_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq23_2 = QuantizePartial(psumq_bits)
+            self.psq23_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv33_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq33_2 = QuantizePartial(psumq_bits)
+            self.psq33_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv43_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq43_2 = QuantizePartial(psumq_bits)
+            self.psq43_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv53_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq53_2 = QuantizePartial(psumq_bits)
+            self.psq53_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv63_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq63_2 = QuantizePartial(psumq_bits)
+            self.psq63_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv73_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq73_2 = QuantizePartial(psumq_bits)
+            self.psq73_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv83_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq83_2 = QuantizePartial(psumq_bits)
+            self.psq83_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv93_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq93_2 = QuantizePartial(psumq_bits)
+            self.psq93_2 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         if (planes > 384):
             self.conv14_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq14_2 = QuantizePartial(psumq_bits)
+            self.psq14_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv24_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq24_2 = QuantizePartial(psumq_bits)
+            self.psq24_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv34_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq34_2 = QuantizePartial(psumq_bits)
+            self.psq34_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv44_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq44_2 = QuantizePartial(psumq_bits)
+            self.psq44_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv54_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq54_2 = QuantizePartial(psumq_bits)
+            self.psq54_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv64_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq64_2 = QuantizePartial(psumq_bits)
+            self.psq64_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv74_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq74_2 = QuantizePartial(psumq_bits)
+            self.psq74_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv84_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq84_2 = QuantizePartial(psumq_bits)
+            self.psq84_2 = QuantizePartial(psumq_bits, dsf_bits)
 
             self.conv94_2 = splitConv1x1(inplanes, planes, nbits=nbits)
-            self.psq94_2 = QuantizePartial(psumq_bits)
+            self.psq94_2 = QuantizePartial(psumq_bits, dsf_bits)
 
 
         ###########################################     END     ##########################################
@@ -557,7 +557,7 @@ class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
 
-    def _make_layer(self, block, planes, blocks, stride=1, nbits=3, psumq_bits=3):
+    def _make_layer(self, block, planes, blocks, stride=1, nbits=3, psumq_bits=3, dsf_bits=8):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
@@ -569,10 +569,11 @@ class ResNet(nn.Module):
 
         layers = []
         layers.append(block(self.inplanes, planes, stride, downsample,
-                            nbits=nbits, psumq_bits=psumq_bits))
+                            nbits=nbits, psumq_bits=psumq_bits, dsf_bits=dsf_bits))
         self.inplanes = planes * block.expansion
         for i in range(1, blocks):
-            layers.append(block(self.inplanes, planes, nbits=nbits, psumq_bits=psumq_bits))
+            layers.append(block(self.inplanes, planes, nbits=nbits,
+                                psumq_bits=psumq_bits, dsf_bits=dsf_bits))
 
         return nn.Sequential(*layers)
 
@@ -597,7 +598,7 @@ class ResNet(nn.Module):
 class ResNet_imagenet(ResNet):
 
     def __init__(self, num_classes=1000,
-                 block=BasicBlock, layers=[3, 4, 23, 3], nbits=3, psumq_bits=3):
+                 block=BasicBlock, layers=[3, 4, 23, 3], nbits=3, psumq_bits=3, dsf_bits=8):
         super(ResNet_imagenet, self).__init__()
         self.inplanes = 64
         #first layer is not quantized
@@ -607,10 +608,14 @@ class ResNet_imagenet(ResNet):
         self.relu = nn.ReLU(inplace=True)
 
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1 = self._make_layer(block, 64, layers[0], nbits=nbits, psumq_bits=psumq_bits)
-        self.layer2 = self._make_layer(block, 128, layers[1], stride=2, nbits=nbits, psumq_bits=psumq_bits)
-        self.layer3 = self._make_layer(block, 256, layers[2], stride=2, nbits=nbits, psumq_bits=psumq_bits)
-        self.layer4 = self._make_layer(block, 512, layers[3], stride=2, nbits=nbits, psumq_bits=psumq_bits)
+        self.layer1 = self._make_layer(block, 64, layers[0], nbits=nbits,
+                                       psumq_bits=psumq_bits, dsf_bits, dsf_bits)
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=2, nbits=nbits,
+                                       psumq_bits=psumq_bits, dsf_bits=dsf_bits)
+        self.layer3 = self._make_layer(block, 256, layers[2], stride=2, nbits=nbits,
+                                       psumq_bits=psumq_bits, dsf_bits=dsf_bits)
+        self.layer4 = self._make_layer(block, 512, layers[3], stride=2, nbits=nbits,
+                                       psumq_bits=psumq_bits, dsf_bits=dsf_bits)
         self.avgpool = nn.AvgPool2d(7)
         self.fc = nn.Linear(512 * block.expansion, num_classes)
 
@@ -627,7 +632,9 @@ class ResNet_imagenet(ResNet):
 def resnet_lsq_ps(**kwargs):
     nbits = kwargs.get('nbits', 3)
     psumq_bits = kwargs.get('psumq_bits', 3)
+    dsf_bits = kwargs.get('dsf_bits', 8)
 
     #resnet18
     return ResNet_imagenet(num_classes=1000, block=BasicBlock,
-                           layers=[2, 2, 2, 2], nbits=nbits, psumq_bits=psumq_bits)
+                           layers=[2, 2, 2, 2], nbits=nbits,
+                           psumq_bits=psumq_bits, dsf_bits=dsf_bits)
