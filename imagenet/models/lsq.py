@@ -60,7 +60,7 @@ def round_pass(x):
     return y
 
 def dsf_grad_scale(s, k, scale):
-    yOut = s.clamp(0, 2**k-1).round()
+    yOut = s #.clamp(0, 2**k-1).round()
     yGrad = s*scale
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
