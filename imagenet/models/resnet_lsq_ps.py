@@ -609,7 +609,7 @@ class ResNet_imagenet(ResNet):
 
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64, layers[0], nbits=nbits,
-                                       psumq_bits=psumq_bits, dsf_bits, dsf_bits)
+                                       psumq_bits=psumq_bits, dsf_bits=dsf_bits)
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2, nbits=nbits,
                                        psumq_bits=psumq_bits, dsf_bits=dsf_bits)
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2, nbits=nbits,
