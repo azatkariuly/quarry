@@ -71,7 +71,7 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
 
     #quantize sf
     s1 = s.clamp(0, 2**k-1).round()
-    s = s.detach() - s1.detach() + s1
+    s = s1.detach() - s.detach() + s
 
     #quantize layer
     s = grad_scale(s, gradScaleFactor)
