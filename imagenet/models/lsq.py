@@ -86,9 +86,8 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     vbar = round_pass((v/s).clamp(Qn, Qp))
     #vhat = vbar*s.round() #.clamp(0, 2**k-1).round()
     #vhat = (vbar*s.round()).detach() - (vbar*s).detach() + vbar*s
-    print(s)
-    vhat = vbar*s #dsf_round_pass(s, k)
-    return vhat
+    #vhat = vbar*s #dsf_round_pass(s, k)
+    return vbar
 
 class Conv2dLSQ(nn.Conv2d):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
