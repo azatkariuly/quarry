@@ -65,6 +65,12 @@ def dsf_round_pass(s, k):
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
 
+def dsf_round_shift_pass(s):
+    yOut = s.log2().round()
+    yGrad = s
+    y = yOut.detach() - yGrad.detach() + yGrad
+    return y
+
 def quantizeLSQ(v, s, p, isActivation=False, k=8):
     if isActivation:
         Qn = 0
@@ -80,10 +86,9 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     vbar = round_pass((v/s).clamp(Qn, Qp))
 
     #s_dsf = dsf_round_pass(s, k)
-    print(s)
-    vhat = vbar*s #*s_dsf
+    vhat = vbar*dsf_round_shift_pass(s)
 
-    return vbar
+    return vhat
 
 class Conv2dLSQ(nn.Conv2d):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
