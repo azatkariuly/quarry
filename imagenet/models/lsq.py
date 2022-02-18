@@ -78,8 +78,10 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     #quantize layer
     s = grad_scale(s, gradScaleFactor)
     vbar = round_pass((v/s).clamp(Qn, Qp))
-    vhat = vbar*dsf_round_pass(s, k)
-    
+
+    s_dsf = dsf_round_pass(s, k)
+    vhat = vbar*s_dsf
+
     return vbar
 
 class Conv2dLSQ(nn.Conv2d):
