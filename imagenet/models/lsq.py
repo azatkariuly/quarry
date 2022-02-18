@@ -80,6 +80,7 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     vbar = round_pass((v/s).clamp(Qn, Qp))
 
     s_dsf = dsf_round_pass(s, k)
+    print(s_dsf)
     vhat = vbar*s_dsf
 
     return vbar
