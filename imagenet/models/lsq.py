@@ -66,7 +66,7 @@ def dsf_round_pass(s, k):
     return y
 
 def dsf_round_shift_pass(s):
-    yOut = s.log2().round()
+    yOut = 2**(s.log2().round())
     yGrad = s
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
@@ -85,8 +85,7 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     s = grad_scale(s, gradScaleFactor)
     vbar = round_pass((v/s).clamp(Qn, Qp))
 
-    s_dsf = dsf_round_shift_pass(s)
-    vhat = vbar*(2**s_dsf)
+    vhat = vbar*dsf_round_shift_pass(s)
     #print(2**s_dsf)
 
     return vhat
