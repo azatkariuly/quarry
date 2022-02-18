@@ -65,12 +65,6 @@ def dsf_round_pass(s, k):
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
 
-def dsf_grad_scale(s, k, scale):
-    yOut = s.clamp(0, 2**k-1).round() #.clamp(0, 2**k-1).round()
-    yGrad = s*scale
-    y = yOut.detach() - yGrad.detach() + yGrad
-    return y
-
 def quantizeLSQ(v, s, p, isActivation=False, k=8):
     if isActivation:
         Qn = 0
@@ -84,7 +78,8 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     #quantize layer
     s = grad_scale(s, gradScaleFactor)
     vbar = round_pass((v/s).clamp(Qn, Qp))
-    vhat = vbar*s.clamp(0, 2**k-1).round().detach()
+    vhat = vbar*dsf_round_pass(s, k)
+    
     return vbar
 
 class Conv2dLSQ(nn.Conv2d):
