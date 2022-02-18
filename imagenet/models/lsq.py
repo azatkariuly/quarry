@@ -79,9 +79,9 @@ def quantizeLSQ(v, s, p, isActivation=False, k=8):
     s = grad_scale(s, gradScaleFactor)
     vbar = round_pass((v/s).clamp(Qn, Qp))
 
-    s_dsf = dsf_round_pass(s, k)
-    print(s_dsf)
-    vhat = vbar*s_dsf
+    #s_dsf = dsf_round_pass(s, k)
+    print(s)
+    vhat = vbar*s #*s_dsf
 
     return vbar
 
