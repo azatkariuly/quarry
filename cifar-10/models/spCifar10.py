@@ -4,8 +4,11 @@ import torchvision.transforms as transforms
 from torch.autograd import Function
 from .binarized_modules import  BinarizeLinear, BinarizeConv2d
 
+# True by default
+bias_bool = False
+
 def splitConv1x1(in_planes, out_planes, stride=1):
-    return BinarizeConv2d(in_planes, out_planes, kernel_size=1, stride=stride, padding=0, bias=True)
+    return BinarizeConv2d(in_planes, out_planes, kernel_size=1, stride=stride, padding=0, bias=bias_bool)
 
 def split_tensor_128(xp):
     x1 = xp.narrow(2, 0, xp.shape[2] - 2).narrow(3, 0, xp.shape[3] - 2)
