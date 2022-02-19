@@ -234,6 +234,7 @@ class VGG_Cifar10(nn.Module):
         self.linear9 = BinarizeLinear(1024, num_classes, bias=True)
         self.batchNorm9 = nn.BatchNorm1d(num_classes, affine=False)
 
+        '''
         self.regime = {
             0: {'optimizer': 'Adam', 'betas': (0.9, 0.999),'lr': 1e-2},
             100: {'lr': 1e-3},
@@ -241,6 +242,7 @@ class VGG_Cifar10(nn.Module):
             300: {'lr': 1e-5},
             400: {'lr': 1e-6}
         }
+        '''
 
     def forward(self, x):
         #skip first layer
