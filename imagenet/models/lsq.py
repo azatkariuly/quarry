@@ -46,6 +46,36 @@ class LSQ(Function):
 
         return grad_output*middle, (grad_output*grad_step_size*grad_scale).sum().unsqueeze(dim=0), None, None
 
+class LSQ_binary(Function):
+    @staticmethod
+    def forward(self, value, step_size):
+        self.save_for_backward(value, step_size)
+
+        #set levels
+        Qn = -1
+        Qp = 1
+
+        v_bar = (value/step_size).ceil().clamp(Qn, Qp)
+        v_hat = v_bar*step_size
+        return v_hat
+
+    @staticmethod
+    def backward(self, grad_output):
+        value, step_size = self.saved_tensors
+
+        #set levels
+        Qn = -1
+        Qp = 1
+
+        grad_scale = 1.0 / math.sqrt(value.numel() * Qp)
+
+        lower = (value/step_size <= Qn).float()
+        higher = (value/step_size >= Qp).float()
+        middle = (1.0 - higher - lower)
+
+        grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).ceil())
+
+        return grad_output*middle, (grad_output*grad_step_size*grad_scale).sum().unsqueeze(dim=0)
 
 def grad_scale(x, scale):
     yOut = x
@@ -132,15 +162,6 @@ class LinearLSQ(nn.Linear):
 
         return F.linear(x, w_q, self.bias)
 
-class _ActQ(nn.Module):
-    def __init__(self, **kwargs_q):
-        super(_ActQ, self).__init__()
-        self.nbits = kwargs_q['nbits']
-        self.step_size = Parameter(torch.Tensor(1))
-
-        #buffer is not updated for optim.step
-        self.register_buffer('init_state', torch.zeros(1))
-
 class ActLSQ(nn.Module):
     def __init__(self, **kwargs):
         super(ActLSQ, self).__init__()
@@ -172,9 +193,15 @@ class PartialSumLSQ(nn.Module):
 
     def forward(self, x):
         if self.init_state == 0:
-            self.step_size.data.copy_(2 * x.abs().mean() / math.sqrt(2 ** self.psumq_bits - 1))
+            if self.psumq_bits == 1:
+                self.step_size.data.copy_(2 * x.abs().mean())
+            else:
+                self.step_size.data.copy_(2 * x.abs().mean() / math.sqrt(2 ** self.psumq_bits - 1))
             self.init_state.fill_(1)
 
-        x_q = quantizeLSQ(x, self.step_size, self.psumq_bits, k=self.dsf_bits)
+        if self.psumq_bits == 1:
+            x_q = LSQ_binary.apply(x, self.step_size)
+        else:
+            x_q = quantizeLSQ(x, self.step_size, self.psumq_bits, k=self.dsf_bits)
 
         return x_q
