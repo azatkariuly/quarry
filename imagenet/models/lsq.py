@@ -56,7 +56,7 @@ class LSQ_binary(Function):
         Qp = 1
 
         v_bar = value.sign() #(value/step_size).ceil().clamp(Qn, Qp)
-        v_hat = v_bar*s #(2**(step_size.log2().round()))
+        v_hat = v_bar*step_size #(2**(step_size.log2().round()))
         return v_hat
 
     @staticmethod
