@@ -56,8 +56,7 @@ class LSQ_binary(Function):
         Qp = 1
 
         v_bar = (value/step_size).ceil().clamp(Qn, Qp)
-        print(v_bar)
-        v_hat = v_bar*step_size
+        v_hat = v_bar*(2**(step_size.log2().round()))
         return v_hat
 
     @staticmethod
@@ -87,12 +86,6 @@ def grad_scale(x, scale):
 def round_pass(x):
     yOut = x.round()
     yGrad = x
-    y = yOut.detach() - yGrad.detach() + yGrad
-    return y
-
-def dsf_round_pass(s, k):
-    yOut = s.clamp(0, 2**k-1).round()
-    yGrad = s
     y = yOut.detach() - yGrad.detach() + yGrad
     return y
 
