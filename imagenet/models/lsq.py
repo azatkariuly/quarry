@@ -69,13 +69,13 @@ class LSQ_binary(Function):
 
         grad_scale = 1.0 / math.sqrt(value.numel() * Qp)
 
-        #lower = (value/step_size <= Qn).float()
-        #higher = (value/step_size >= Qp).float()
-        #middle = (1.0 - higher - lower)
+        lower = (value/step_size <= Qn).float()
+        higher = (value/step_size >= Qp).float()
+        middle = (1.0 - higher - lower)
 
-        #grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).ceil())
+        grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).ceil())
 
-        return grad_output, (grad_output*value.sign()*grad_scale).sum().unsqueeze(dim=0)
+        return grad_output*middle, (grad_output*grad_step_size*grad_scale).sum().unsqueeze(dim=0)
 
 def grad_scale(x, scale):
     yOut = x
