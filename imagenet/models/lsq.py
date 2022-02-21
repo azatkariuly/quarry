@@ -75,7 +75,7 @@ class LSQ_binary(Function):
 
         #grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).ceil())
 
-        return grad_output*middle, (grad_output*value.sign()*grad_scale).sum().unsqueeze(dim=0)
+        return grad_output, (grad_output*value.sign()*grad_scale).sum().unsqueeze(dim=0)
 
 def grad_scale(x, scale):
     yOut = x
