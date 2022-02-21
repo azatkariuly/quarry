@@ -200,6 +200,7 @@ class PartialSumLSQ(nn.Module):
             self.init_state.fill_(1)
 
         if self.psumq_bits == 1:
+            print('binary')
             x_q = LSQ_binary.apply(x, self.step_size)
         else:
             x_q = quantizeLSQ(x, self.step_size, self.psumq_bits, k=self.dsf_bits)
