@@ -51,7 +51,7 @@ class LSQ_binary(Function):
     def forward(self, value, step_size):
         self.save_for_backward(value, step_size)
 
-        v_bar = value.sign() #(value/step_size).ceil().clamp(Qn, Qp)
+        v_bar = (value/step_size).sign() #(value/step_size).ceil().clamp(Qn, Qp)
         v_hat = v_bar*step_size #(2**(step_size.log2().round()))
         return v_hat
 
@@ -65,13 +65,13 @@ class LSQ_binary(Function):
 
         grad_scale = 1.0 / math.sqrt(value.numel() * Qp)
 
-        #lower = (value/step_size <= Qn).float()
-        #higher = (value/step_size >= Qp).float()
-        #middle = (1.0 - higher - lower)
+        lower = (value/step_size <= Qn).float()
+        higher = (value/step_size >= Qp).float()
+        middle = (1.0 - higher - lower)
 
-        #grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).ceil())
+        grad_step_size = lower*Qn + higher*Qp + middle*(-value/step_size + (value/step_size).sign())
 
-        return grad_output, (grad_output*value.sign()*grad_scale).sum().unsqueeze(dim=0)
+        return grad_output*middle, (grad_output*grad_step_size*grad_scale).sum().unsqueeze(dim=0)
 
 def grad_scale(x, scale):
     yOut = x
