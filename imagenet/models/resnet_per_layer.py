@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 import math
 from .lsq import Conv2dLSQ, LinearLSQ, ActLSQ, PartialSumLSQ
 
-__all__ = ['resnet_perLayer']
+__all__ = ['resnet_per_layer']
 
 def splitConv1x1(in_planes, out_planes, stride=1, nbits=3):
     "3x3 convolution with padding"
@@ -498,7 +498,7 @@ class ResNet_imagenet(ResNet):
         }
 
 
-def resnet_perLayer(**kwargs):
+def resnet_per_layer(**kwargs):
     nbits = kwargs.get('nbits', 3)
     psumq_bits = kwargs.get('psumq_bits', 3)
     dsf_bits = kwargs.get('dsf_bits', 8)
